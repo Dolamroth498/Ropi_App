@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Ropi App</string>
+    <string name="email_cim">Email Cím</string>
+    <string name="password">Jelszó</string>
+    <string name="login">Bejelentkezés</string>
+    <string name="register">Regisztráció</string>
+    <string name="name">Név</string>
+    <string name="password_again">Jelszó megerősítés</string>
+    <string name="address">Lakcím</string>
+    <string name="cancel">Mégse</string>
+    <string name="phone">Telefonszám</string>
+    <string name="guest">Vendég</string>
+    <string name="google">Bejelentkezés Googlefiókkal</string>
+    <string name="default_web_client_id">your-client-id.apps.googleusercontent.com</string>
+
+</resources>
