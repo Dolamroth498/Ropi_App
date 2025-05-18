@@ -7,4 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".BajnoksagActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="Bajnokság"
+        app:titleTextColor="@android:color/white"
+        tools:ignore="MissingConstraints" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -166,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
     private void startLeague(){
         Intent intent = new Intent(this, BajnoksagActivity.class);
         startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
     public void googleLogin(View view) {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -191,5 +192,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RegisterActivity.class);
         intent.putExtra("SECRET_KEY", SECRET_KEY);
         startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

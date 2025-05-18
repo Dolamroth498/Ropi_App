@@ -17,5 +17,9 @@
     <string name="logout">Kijelentkezés</string>
     <string name="search">Search</string>
     <string name="leage">Bajnokság</string>
+    <string name="email">Email:</string>
+    <string name="change">Módosítás</string>
+    <string name="save">Mentés</string>
+    <string name="deleteButton">Fiók törlése</string>
 
 </resources>
