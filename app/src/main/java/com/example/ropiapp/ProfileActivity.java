@@ -1,5 +1,6 @@
 package com.example.ropiapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-public class ProfilActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,16 +30,20 @@ public class ProfilActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.bajnoksag_menu, menu);
+        getMenuInflater().inflate(R.menu.profil_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.gamesButton) {
+        if (id == R.id.leageButton) {
+            Intent intent = new Intent(this, BajnoksagActivity.class);
+            startActivity(intent);
             return true;
-        } else if (id == R.id.profilButton) {
+        } else if (id == R.id.gamesButton) {
+            Intent intent = new Intent(this, GamesActivity.class);
+            startActivity(intent);
             return true;
         } else if (id == R.id.logoutButton) {
             FirebaseAuth.getInstance().signOut();

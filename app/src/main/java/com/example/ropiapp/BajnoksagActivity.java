@@ -1,9 +1,13 @@
 package com.example.ropiapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -34,6 +38,33 @@ public class BajnoksagActivity extends AppCompatActivity {
         }else{
             Log.d(LOG_TAG, "Nem bejelentkezett felhasználó!");
             finish();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.bajnoksag_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.gamesButton) {
+            Intent intent = new Intent(this, GamesActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.profileButton) {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.logoutButton) {
+            FirebaseAuth.getInstance().signOut();
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 }
