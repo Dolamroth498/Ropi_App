@@ -1,6 +1,13 @@
 package com.example.ropiapp;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +26,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -41,6 +50,13 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission("android.permission.POST_NOTIFICATIONS") != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, 1);
+            }
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -85,6 +101,17 @@ public class ProfileActivity extends AppCompatActivity {
                     .addOnSuccessListener(unused -> {
                         Toast.makeText(this, "Adatok mentve.", Toast.LENGTH_SHORT).show();
 
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "mentes_channel")
+                                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                                .setContentTitle("Mentés sikeres")
+                                .setContentText("A profil adataid elmentve.")
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+                        notificationManager.notify(100, builder.build());
+
+
+
                         // Beviteli mezők lezárása
                         nameET.setEnabled(false);
                         phoneET.setEnabled(false);
@@ -110,6 +137,30 @@ public class ProfileActivity extends AppCompatActivity {
             saveButton.setVisibility(View.VISIBLE);
         });
 
+        Button alarmButton = findViewById(R.id.alarmButton);
+        alarmButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, NotificationReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (!alarmManager.canScheduleExactAlarms()) {
+                    Toast.makeText(this, "A pontos ébresztések nincsenek engedélyezve.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+
+            try {
+                long triggerTime = System.currentTimeMillis() + 60 * 60 * 1000; // 10 mp múlva
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+                Toast.makeText(this, "Értesítés 10 másodperc múlva...", Toast.LENGTH_SHORT).show();
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Nem sikerült beállítani az ébresztőt: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
 
         Button deleteAccountButton = findViewById(R.id.deleteAccountButton);
         deleteAccountButton.setOnClickListener(v -> {
@@ -124,6 +175,15 @@ public class ProfileActivity extends AppCompatActivity {
                     .show();
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    "mentes_channel",
+                    "Mentési Értesítések",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
 
     }
 
@@ -238,6 +298,19 @@ public class ProfileActivity extends AppCompatActivity {
                     .addOnFailureListener(e -> {
                         Toast.makeText(this, "Nem sikerült törölni az adatokat: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Értesítési engedély megadva", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Értesítési engedély megtagadva – nem fogsz kapni értesítéseket.", Toast.LENGTH_LONG).show();
+            }
+
         }
     }
 
