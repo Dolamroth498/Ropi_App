@@ -21,5 +21,6 @@
     <string name="change">Módosítás</string>
     <string name="save">Mentés</string>
     <string name="deleteButton">Fiók törlése</string>
+    <string name="alarm">Értesítés indítása</string>
 
 </resources>
