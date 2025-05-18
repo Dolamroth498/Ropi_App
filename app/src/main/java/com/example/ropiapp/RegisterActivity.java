@@ -19,6 +19,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String LOG_TAG = RegisterActivity.class.getName();
@@ -28,9 +32,13 @@ public class RegisterActivity extends AppCompatActivity {
     EditText emailET;
     EditText passwordET;
     EditText passwordConfirmET;
+    EditText phoneET;
+    EditText addressET;
 
     private SharedPreferences preferences;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,9 @@ public class RegisterActivity extends AppCompatActivity {
         emailET = findViewById(R.id.email);
         passwordET = findViewById(R.id.password);
         passwordConfirmET = findViewById(R.id.passwordAgain);
+        phoneET = findViewById(R.id.mobil);
+        addressET = findViewById(R.id.address);
+
 
         preferences = getSharedPreferences(PREF_KEY, MODE_PRIVATE);
         String userEmail = preferences.getString("emailCim", "");
@@ -66,6 +77,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        db = FirebaseFirestore.getInstance();
+
+
         Log.i(LOG_TAG, "onCreate");
     }
 
@@ -74,6 +88,13 @@ public class RegisterActivity extends AppCompatActivity {
         String email = emailET.getText().toString();
         String password = passwordET.getText().toString();
         String passwordConfirm = passwordConfirmET.getText().toString();
+        String address = addressET.getText().toString();
+        String phone = phoneET.getText().toString();
+
+        if (email.isEmpty() || password.isEmpty() || passwordConfirm.isEmpty()) {
+            Toast.makeText(this, "Kérlek, töltsd ki az összes mezőt!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if(!password.equals(passwordConfirm)){
             Log.e(LOG_TAG, "Nem egyeszik a két jelszó!");
@@ -86,13 +107,34 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Log.d(LOG_TAG, "Felhasználó sikeresen elkészült!");
-                    startLeague();
-                }else{
+
+                    FirebaseUser registeredUser = task.getResult().getUser();
+                    if (registeredUser != null) {
+                        String uid = registeredUser.getUid();
+                        Map<String, Object> userData = new HashMap<>();
+                        userData.put("name", name.isEmpty() ? "nincs megadva" : name);
+                        userData.put("email", email);
+                        userData.put("address", address.isEmpty() ? "nincs megadva" : address);
+                        userData.put("phone", phone.isEmpty() ? "nincs megadva" : phone);
+
+                        db.collection("users").document(uid).set(userData)
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d(LOG_TAG, "Felhasználói adatok elmentve.");
+                                    startLeague();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e(LOG_TAG, "Hiba a Firestore mentés közben: " + e.getMessage());
+                                    Toast.makeText(RegisterActivity.this, "Hiba az adatok mentésekor", Toast.LENGTH_SHORT).show();
+                                });
+                    }
+
+                } else {
                     Log.d(LOG_TAG, "Felhasználó nem készült el!");
                     Toast.makeText(RegisterActivity.this, "Felhasználó nem készült el: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
+
             }
         });
     }
@@ -102,8 +144,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void startLeague(){
+        Log.d(LOG_TAG, "Indítjuk a BajnoksagActivity-t");
         Intent intent = new Intent(this, BajnoksagActivity.class);
         startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        finish();
     }
 
     @Override

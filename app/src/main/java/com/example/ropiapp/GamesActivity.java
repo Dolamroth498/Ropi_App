@@ -18,45 +18,35 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class BajnoksagActivity extends AppCompatActivity {
+public class GamesActivity extends AppCompatActivity {
 
-    private static final String LOG_TAG = BajnoksagActivity.class.getName();
-    private FirebaseUser user;
+    private static final String LOG_TAG = GamesActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_bajnoksag);
+        setContentView(R.layout.activity_games);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
-            Log.d(LOG_TAG, "Bejelentkezett felhasználó!");
-        }else{
-            Log.d(LOG_TAG, "Nem bejelentkezett felhasználó!");
-            finish();
-        }
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.bajnoksag_menu, menu);
+        getMenuInflater().inflate(R.menu.games_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.gamesButton) {
-            Intent intent = new Intent(this, GamesActivity.class);
+        if (id == R.id.leageButton) {
+            Intent intent = new Intent(this, BajnoksagActivity.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             return true;
@@ -155,14 +145,14 @@ public class BajnoksagActivity extends AppCompatActivity {
                         guestUser.delete().addOnCompleteListener(task -> {
                             FirebaseAuth.getInstance().signOut(); // Biztos ami biztos
                             Intent intent = new Intent(this, MainActivity.class);
-                            startActivity(intent);
                             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                            startActivity(intent);
                             finish();
                         });
                     } else {
                         Intent intent = new Intent(this, MainActivity.class);
-                        startActivity(intent);
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                        startActivity(intent);
                     }
                 })
                 .setNegativeButton("Regisztráció", (dialog, which) -> {

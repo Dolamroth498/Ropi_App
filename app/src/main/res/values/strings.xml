@@ -12,5 +12,15 @@
     <string name="guest">Vendég</string>
     <string name="google">Bejelentkezés Googlefiókkal</string>
     <string name="default_web_client_id">your-client-id.apps.googleusercontent.com</string>
+    <string name="games">Meccsek</string>
+    <string name="profile">Profil</string>
+    <string name="logout">Kijelentkezés</string>
+    <string name="search">Search</string>
+    <string name="leage">Bajnokság</string>
+    <string name="email">Email:</string>
+    <string name="change">Módosítás</string>
+    <string name="save">Mentés</string>
+    <string name="deleteButton">Fiók törlése</string>
+    <string name="alarm">Értesítés indítása</string>
 
 </resources>
