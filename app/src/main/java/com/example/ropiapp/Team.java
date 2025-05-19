@@ -1,18 +1,37 @@
 package com.example.ropiapp;
 
-public class Teams {
-    private String teamName;
+public class Team {
+    private String name;
+    private int played;
+    private int won;
+    private int lost;
     private int points;
-    private int rank;
 
-    public Teams(String teamName, int points, int rank) {
-        this.teamName = teamName;
+    public Team(String name, int played, int won, int lost, int points) {
+        this.name = name;
+        this.played = played;
+        this.won = won;
+        this.lost = lost;
         this.points = points;
-        this.rank = rank;
     }
 
-    public String getTeamName() { return teamName; }
-    public int getPoints() { return points; }
-    public int getRank() { return rank; }
-}
+    public String getName() {
+        return name;
+    }
 
+    public int getPlayed() {
+        return played;
+    }
+
+    public int getWon() {
+        return won;
+    }
+
+    public int getLost() {
+        return lost;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+}

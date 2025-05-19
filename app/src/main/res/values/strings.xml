@@ -22,5 +22,8 @@
     <string name="save">Mentés</string>
     <string name="deleteButton">Fiók törlése</string>
     <string name="alarm">Értesítés indítása</string>
+    <string name="rank">Helyezés</string>
+    <string name="team_name">Csapat Neve</string>
+    <string name="points">Pontok</string>
 
 </resources>

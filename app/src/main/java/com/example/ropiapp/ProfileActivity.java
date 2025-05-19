@@ -199,6 +199,7 @@ public class ProfileActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.leageButton) {
             Intent intent = new Intent(this, BajnoksagActivity.class);
+            intent.putExtra("league_id", "extraliga");
             startActivity(intent);
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             return true;

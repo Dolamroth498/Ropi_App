@@ -14,9 +14,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.List;
 
 public class GamesActivity extends AppCompatActivity {
 
@@ -34,6 +38,13 @@ public class GamesActivity extends AppCompatActivity {
         });
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
+
+        RecyclerView recyclerView = findViewById(R.id.gamesRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        List<Game> games = GameData.getAllGames();
+        GamesAdapter adapter = new GamesAdapter(games);
+        recyclerView.setAdapter(adapter);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -47,6 +58,7 @@ public class GamesActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.leageButton) {
             Intent intent = new Intent(this, BajnoksagActivity.class);
+            intent.putExtra("league_id", "extraliga");
             startActivity(intent);
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             return true;

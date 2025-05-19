@@ -14,9 +14,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.List;
 
 public class BajnoksagActivity extends AppCompatActivity {
 
@@ -33,6 +37,7 @@ public class BajnoksagActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        String leagueId = getIntent().getStringExtra("league_id");
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
@@ -43,6 +48,14 @@ public class BajnoksagActivity extends AppCompatActivity {
         }
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
+
+        RecyclerView recyclerView = findViewById(R.id.leagueTableRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        List<Team> teams = TeamData.getTeams();
+        TeamAdapter adapter = new TeamAdapter(teams);
+        recyclerView.setAdapter(adapter);
+
     }
 
     @Override

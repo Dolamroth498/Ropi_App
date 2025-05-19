@@ -11,43 +11,45 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> {
+public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder> {
+    private List<Team> teamList;
 
-    private List<Teams> teams;
+    public TeamAdapter(List<Team> teamList) {
+        this.teamList = teamList;
+    }
 
-    public TeamsAdapter(List<Teams> standings) {
-        this.teams = standings;
+    public static class TeamViewHolder extends RecyclerView.ViewHolder {
+        TextView nameTV, playedTV, wonTV, lostTV, pointsTV;
+
+        public TeamViewHolder(@NonNull View itemView) {
+            super(itemView);
+            nameTV = itemView.findViewById(R.id.teamName);
+            playedTV = itemView.findViewById(R.id.gamesPlayed);
+            wonTV = itemView.findViewById(R.id.gamesWon);
+            lostTV = itemView.findViewById(R.id.gamesLost);
+            pointsTV = itemView.findViewById(R.id.points);
+        }
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TeamViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.table_row_item, parent, false);
-        return new ViewHolder(view);
+        return new TeamViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Teams team = teams.get(position);
-        holder.teamName.setText(team.getTeamName());
-        holder.points.setText("Pont: " + team.getPoints());
-        holder.rank.setText(String.valueOf(team.getRank()));
+    public void onBindViewHolder(@NonNull TeamViewHolder holder, int position) {
+        Team team = teamList.get(position);
+        holder.nameTV.setText(team.getName());
+        holder.playedTV.setText(String.valueOf(team.getPlayed()));
+        holder.wonTV.setText(String.valueOf(team.getWon()));
+        holder.lostTV.setText(String.valueOf(team.getLost()));
+        holder.pointsTV.setText(String.valueOf(team.getPoints()));
     }
 
     @Override
     public int getItemCount() {
-        return teams.size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView teamName, points, rank;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            teamName = itemView.findViewById(R.id.teamName);
-            points = itemView.findViewById(R.id.points);
-            rank = itemView.findViewById(R.id.rank);
-        }
+        return teamList.size();
     }
 }
-
