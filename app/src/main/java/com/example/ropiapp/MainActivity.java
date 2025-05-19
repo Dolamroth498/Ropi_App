@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startLeague(){
         Intent intent = new Intent(this, BajnoksagActivity.class);
+        intent.putExtra("league_id", "extraliga");
         startActivity(intent);
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
